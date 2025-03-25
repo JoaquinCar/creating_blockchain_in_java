@@ -6,6 +6,7 @@ import java.util.Date;
         public String previousHash;
         private String data;
         private long timeStamp;
+        private int nonce;
 
         //constructor
         public block(String data, String previousHash) {
@@ -13,6 +14,7 @@ import java.util.Date;
             this.previousHash = previousHash;
             this.timeStamp = new Date().getTime(); //get current time
             this.hash = calculateHash();
+
         }
 
         public String calculateHash() {
@@ -22,5 +24,15 @@ import java.util.Date;
                             data
             );
             return calculatedhash;
+        }
+
+        public void mineBlock(int difficulty){
+            String target = new String(new char[difficulty]).replace('\0', '0');
+            while(!hash.substring(0, difficulty).equals(target)){
+                nonce++;
+                hash = calculateHash();
+            }
+            System.out.println("Block Mined!!! : " + hash);
+
         }
     }
