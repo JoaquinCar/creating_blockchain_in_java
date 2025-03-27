@@ -4,8 +4,8 @@ import java.util.Date;
     public class block {
         public String hash;
         public String previousHash;
-        private String data;
-        private long timeStamp;
+        private final String data;
+        private final long timeStamp;
         private int nonce;
 
         //constructor
@@ -18,21 +18,21 @@ import java.util.Date;
         }
 
         public String calculateHash() {
-            String calculatedhash = stringUtil.applySha256(
+            //long essentially is a 64-bit signed two's complement integer
+            return stringUtil.applySha256(
                     previousHash +
-                            Long.toString(timeStamp) + //long essentially is a 64-bit signed two's complement integer
+                            timeStamp +
+                            nonce +//long essentially is a 64-bit signed two's complement integer
                             data
             );
-            return calculatedhash;
         }
 
-        public void mineBlock(int difficulty){
-            String target = new String(new char[difficulty]).replace('\0', '0');
-            while(!hash.substring(0, difficulty).equals(target)){
+        public void mineBlock(int difficulty) {
+            String target = stringUtil.getDificultyString(difficulty);
+            while (!hash.substring(0, difficulty).equals(target)) {
                 nonce++;
                 hash = calculateHash();
-            }
+                }
             System.out.println("Block Mined!!! : " + hash);
-
         }
     }
